@@ -42,7 +42,7 @@
 ```
 
 `При необходимости прикрепитe сюда скриншоты
-![Название скриншота 1](https://github.com/vasya436/gitlab-hw/blob/main/img/task_result_v2.png?raw=true)`
+![Название скриншота 1]()`
 
 
 ---
