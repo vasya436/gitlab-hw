@@ -43,6 +43,7 @@
 
 `При необходимости прикрепитe сюда скриншоты
 ![Название скриншота 1]()`
+<img width="861" height="472" alt="task_result" src="https://github.com/user-attachments/assets/0ae657f4-399c-4935-9c8b-062aaf91bcaf" />
 
 
 ---
