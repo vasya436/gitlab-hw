@@ -34,12 +34,12 @@ systemctl enable zabbix-server zabbix-agent apache2
 
 Решение:
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task2_screenshot.png
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task1_screenshot.png
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task2_screenshot.png)
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task3_screenshot.png
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task1_screenshot.png)
 
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task3_screenshot.png)
 
 
 
@@ -63,12 +63,11 @@ https://github.com/vasya436/gitlab-hw/blob/main/img/task3_screenshot.png
     Приложите в файл README.md текст использованных команд в GitHub
 
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task4_screenshot.png?raw=true
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task4_screenshot.png)
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task5_screenshot.png?raw=true
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task5_screenshot.png)
 
-https://github.com/vasya436/gitlab-hw/blob/main/img/task6_screenshot.png?raw=true
-
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task6_screenshot.png)
 
 ```
 sudo -s
