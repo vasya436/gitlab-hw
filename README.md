@@ -1,69 +1,90 @@
-# Домашнее задание к занятию "GitLab" - Ткаченко Василий
+# Домашнее задание к занятию "Система мониторинга Zabbix" - Ткаченко Василий
 
 ### Задание 1
 
-Задание 1
+Установите Zabbix Server с веб-интерфейсом.
+Процесс выполнения
 
-Что нужно сделать:
+    Выполняя ДЗ, сверяйтесь с процессом отражённым в записи лекции.
+    Установите PostgreSQL. Для установки достаточна та версия, что есть в системном репозитороии Debian 11.
+    Пользуясь конфигуратором команд с официального сайта, составьте набор команд для установки последней версии Zabbix с поддержкой PostgreSQL и Apache.
+    Выполните все необходимые команды для установки Zabbix Server и Zabbix Web Server.
 
-Разверните GitLab локально, используя Vagrantfile и инструкции, описанные в этом репозитории.
-Создайте новый проект и пустой репозиторий в нём.
-Зарегистрируйте gitlab-runner для этого проекта и запустите его в режиме Docker. Раннер можно зарегистрировать и запустить на той же виртуальной машине, на которой запущен GitLab.
+sudo -s
 
-В качестве ответа добавьте в репозиторий шаблона с решением скриншоты с настройками раннера в проекте.
+wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu24.04_all.deb
+
+dpkg -i zabbix-release_latest_7.0+ubuntu24.04_all.deb
+
+apt update
+
+apt install zabbix-server-pgsql zabbix-frontend-php php8.3-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+
+sudo -u postgres createuser --pwprompt zabbix
+
+sudo -u postgres createdb -O zabbix zabbix
+
+zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
+
+sed -i 's/# DBPassword=/DBPassword=123456789/g' /etc/zabbix/zabbix_server.conf
+
+systemctl restart zabbix-server zabbix-agent apache2
+
+systemctl enable zabbix-server zabbix-agent apache2
 
 Решение:
 
-вход в GitLab
-<img width="861" height="472" alt="task_result" src="https://github.com/user-attachments/assets/0ae657f4-399c-4935-9c8b-062aaf91bcaf" />
+https://github.com/vasya436/gitlab-hw/blob/main/img/task2_screenshot.png
 
-Настройка Runner
+https://github.com/vasya436/gitlab-hw/blob/main/img/task1_screenshot.png
 
-<img width="812" height="583" alt="task_result_v3" src="https://github.com/user-attachments/assets/76322b72-b3b6-43f4-854b-270210a8c482" />
+https://github.com/vasya436/gitlab-hw/blob/main/img/task3_screenshot.png
 
-<img width="717" height="590" alt="task_result_v2" src="https://github.com/user-attachments/assets/983f0d0f-49a4-47dc-92ea-cd54fd2f40dc" />
 
 
 
 ---
 
 ### Задание 2
-Что нужно сделать:
+Установите Zabbix Agent на два хоста.
+Процесс выполнения
 
-Запустите репозиторий на GitLab, изменив origin. Это мы проходили на занятии по Git.
-Создайте файл .gitlab-ci.yml, описав в нём все необходимые, на ваш взгляд, этапы.
+    Выполняя ДЗ, сверяйтесь с процессом отражённым в записи лекции.
+    Установите Zabbix Agent на 2 вирт.машины, одной из них может быть ваш Zabbix Server.
+    Добавьте Zabbix Server в список разрешенных серверов ваших Zabbix Agentов.
+    Добавьте Zabbix Agentов в раздел Configuration > Hosts вашего Zabbix Servera.
+    Проверьте, что в разделе Latest Data начали появляться данные с добавленных агентов.
 
-В качестве ответа добавьте в шаблон с решением:
+Требования к результатам
 
-Создайте файл gitlab-ci.yml для своего проекта или вставьте код в соответствующее поле в шаблоне;
-Скриншоты успешно собранных сборок.
+    Приложите в файл README.md скриншот раздела Configuration > Hosts, где видно, что агенты подключены к серверу
+    Приложите в файл README.md скриншот лога zabbix agent, где видно, что он работает с сервером
+    Приложите в файл README.md скриншот раздела Monitoring > Latest data для обоих хостов, где видны поступающие от агентов данные.
+    Приложите в файл README.md текст использованных команд в GitHub
 
 
-<img width="625" height="302" alt="task_result_v4" src="https://github.com/user-attachments/assets/9fcfdc70-ecee-4e42-b5f4-5062da7dae9b" />
-<img width="804" height="511" alt="task_result_v5" src="https://github.com/user-attachments/assets/f2d0d031-28e8-49e1-ac8b-368816082d06" />
-<img width="802" height="337" alt="task_result_v6" src="https://github.com/user-attachments/assets/9e609d04-b7a1-4cea-9f1c-6c5b81ef4b89" />
+https://github.com/vasya436/gitlab-hw/blob/main/img/task4_screenshot.png?raw=true
+
+https://github.com/vasya436/gitlab-hw/blob/main/img/task5_screenshot.png?raw=true
+
+https://github.com/vasya436/gitlab-hw/blob/main/img/task6_screenshot.png?raw=true
 
 
 ```
-stages:
-  - test
-  - build
+sudo -s
 
-test:
-  stage: test
-  image: golang:1.17
-  script: 
-   - go test .
-  tags:
-    - my-runner
+wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_6.0+ubuntu24.04_all.deb
 
-build:
-  stage: build
-  image: docker:latest
-  script:
-   - docker build .
-  tags:
-     - my-runner
+dpkg -i zabbix-release_latest_6.0+ubuntu24.04_all.deb
+
+apt update
+
+apt install zabbix-agent
+
+systemctl restart zabbix-agent
+
+systemctl enable zabbix-agent
+
 
 
 
