@@ -67,6 +67,8 @@ systemctl enable zabbix-server zabbix-agent apache2
 
 ![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task5_screenshot.png)
 
+![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task7_screenshot.png)
+
 ![скриншот](https://github.com/vasya436/gitlab-hw/blob/main/img/task6_screenshot.png)
 
 ```
