@@ -1,33 +1,26 @@
-# Домашнее задание "Система мониторинга Zabbix. Часть 2" - Ткаченко Василий
+# Домашнее задание к занятию «Disaster Recovery. FHRP и Keepalived» - Ткаченко Василий
 
 ### Задание 1
 
-Создайте свой шаблон, в котором будут элементы данных, мониторящие загрузку CPU и RAM хоста.
-Процесс выполнения
-
-    Выполняя ДЗ сверяйтесь с процессом отражённым в записи лекции.
-    В веб-интерфейсе Zabbix Servera в разделе Templates создайте новый шаблон
-    Создайте Item который будет собирать информацию об загрузке CPU в процентах
-    Создайте Item который будет собирать информацию об загрузке RAM в процентах
-
-Требования к результату
-
-    Прикрепите в файл README.md скриншот страницы шаблона с названием «Задание 1»
+Дана схема для Cisco Packet Tracer, рассматриваемая в лекции.
+На данной схеме уже настроено отслеживание интерфейсов маршрутизаторов Gi0/1 (для нулевой группы)
+Необходимо аналогично настроить отслеживание состояния интерфейсов Gi0/0 (для первой группы).
+Для проверки корректности настройки, разорвите один из кабелей между одним из маршрутизаторов и Switch0 и запустите ping между PC0 и Server0.
+На проверку отправьте получившуюся схему в формате pkt и скриншот, где виден процесс настройки маршрутизатора.
 
 
 Решение:
 
 
-![Alt text](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task1_screenshot%20(2).png)
+![Описание скриншота](https://github.com/vasya436/gitlab-hw/blob/main/img/task1_screenshot.png)
 
 
-![Скриншот задачи 2](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task2_screenshot%20(2).png)
+
+![Описание скриншота задания 2](https://github.com/vasya436/gitlab-hw/blob/main/img/task2_screenshot.png)
 
 
-![Скриншот задачи 3](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task3_screenshot.png)
 
-
-![Скриншот задачи 4](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task4_screenshot.png)
+![Скриншот задания 3: перенос VIP‑адреса](https://github.com/vasya436/gitlab-hw/blob/main/img/task3_screenshot.png)
 
 
 
