@@ -17,10 +17,8 @@
 
 ![Описание скриншота задания 2](https://github.com/vasya436/gitlab-hw/blob/main/img/task2_screenshot.png)
 
-конфигурационный файл haproxy:
 
-[конфигурационный файл haproxy](https://raw.githubusercontent.com/vasya436/gitlab-hw/refs/heads/main/haproxy.md)
-
+[конфигурационный файл haproxy](configs/haproxy.cfg) 
 ---
 
 ### Задание 2
