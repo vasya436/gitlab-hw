@@ -43,13 +43,13 @@
 ---
 
 
+[Конфигурационный файл provider]https://raw.githubusercontent.com/vasya436/gitlab-hw/refs/heads/main/configs/provider.tf
 
+[Конфигурационный файл network]https://raw.githubusercontent.com/vasya436/gitlab-hw/refs/heads/main/configs/network.tf.cfg
 
-    
-[Конфигурационный файл crontab](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/configs/crontab.cfg)
+[Конфигурационный файл instances]https://raw.githubusercontent.com/vasya436/gitlab-hw/refs/heads/main/configs/instances.tf
 
-
-
+[Конфигурационный файл load_balancer]https://raw.githubusercontent.com/vasya436/gitlab-hw/refs/heads/main/configs/load_balancer.tf.cfg
 
 
 
