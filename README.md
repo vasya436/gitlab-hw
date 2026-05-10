@@ -1,57 +1,80 @@
-# Домашнее задание к занятию  "ELK"
+# Домашнее задание к занятию  "Очереди RabbitMQ"
 
 
-### Задание 1. Elasticsearch
-Установите и запустите Elasticsearch, после чего поменяйте параметр cluster_name на случайный.
+### Задание 1. Установка RabbitMQ
+Используя Vagrant или VirtualBox, создайте виртуальную машину и установите RabbitMQ. Добавьте management plug-in и зайдите в веб-интерфейс.
 
-Приведите скриншот команды 'curl -X GET 'localhost:9200/_cluster/health?pretty', сделанной на сервере с установленным Elasticsearch. Где будет виден нестандартный cluster_name.
+Итогом выполнения домашнего задания будет приложенный скриншот веб-интерфейса RabbitMQ.
 
 Решение:
 
-![Описание скриншота](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task25_screenshot.png)
+![Скриншот задачи 3.5](https://github.com/vasya436/gitlab-hw/blob/main/img/task35_screenshot.png)
+
 
 
 
 ---
 
-Задание 2. Kibana
-Установите и запустите Kibana.
+Задание 2. Отправка и получение сообщений
+Используя приложенные скрипты, проведите тестовую отправку и получение сообщения. Для отправки сообщений необходимо запустить скрипт producer.py.
 
-Приведите скриншот интерфейса Kibana на странице http://<ip вашего сервера>:5601/app/dev_tools#/console, где будет выполнен запрос GET /_cluster/health?pretty.
+Для работы скриптов вам необходимо установить Python версии 3 и библиотеку Pika. Также в скриптах нужно указать IP-адрес машины, на которой запущен RabbitMQ, заменив localhost на нужный IP.
 
-![Описание скриншота](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task26_screenshot.png)
+$ pip install pika
 
+Зайдите в веб-интерфейс, найдите очередь под названием hello и сделайте скриншот. После чего запустите второй скрипт consumer.py и сделайте скриншот результата выполнения скрипта
 
+В качестве решения домашнего задания приложите оба скриншота, сделанных на этапе выполнения.
 
+Для закрепления материала можете попробовать модифицировать скрипты, чтобы поменять название очереди и отправляемое сообщение.
 
-Задание 3. Logstash
-Установите и запустите Logstash и Nginx. С помощью Logstash отправьте access-лог Nginx в Elasticsearch.
+![Alt‑текст (описание скриншота)](https://github.com/vasya436/gitlab-hw/blob/main/img/task36_screenshot.png "Подпись к скриншоту")
 
-Приведите скриншот интерфейса Kibana, на котором видны логи Nginx.
+![Описание скриншота](https://github.com/vasya436/gitlab-hw/blob/main/img/task37_screenshot.png)
 
-![Описание скриншота](img/task27_screenshot.png)
-
-![Task 28 Screenshot](img/task28_screenshot.png)
-
-![Описание скриншота](./img/task29_screenshot.png)
+![Описание скриншота](https://github.com/vasya436/gitlab-hw/blob/main/img/task38_screenshot.png)
 
 
 
+Задание 3. Подготовка HA кластера
+Используя Vagrant или VirtualBox, создайте вторую виртуальную машину и установите RabbitMQ. Добавьте в файл hosts название и IP-адрес каждой машины, чтобы машины могли видеть друг друга по имени.
 
-Задание 4. Filebeat.
-Установите и запустите Filebeat. Переключите поставку логов Nginx с Logstash на Filebeat.
+Пример содержимого hosts файла:
 
-Приведите скриншот интерфейса Kibana, на котором видны логи Nginx, которые были отправлены через Filebeat.
+$ cat /etc/hosts
+192.168.0.10 rmq01
+192.168.0.11 rmq02
+После этого ваши машины могут пинговаться по имени.
 
-![Task 30 Screenshot](https://github.com/vasya436/gitlab-hw/blob/main/img/task30_screenshot.png?raw=true "Скриншот к заданию 30")
+Затем объедините две машины в кластер и создайте политику ha-all на все очереди.
 
-![Task 3.1 Screenshot](./img/task31_screenshot.png)
+В качестве решения домашнего задания приложите скриншоты из веб-интерфейса с информацией о доступных нодах в кластере и включённой политикой.
+
+Также приложите вывод команды с двух нод:
+
+$ rabbitmqctl cluster_status
+Для закрепления материала снова запустите скрипт producer.py и приложите скриншот выполнения команды на каждой из нод:
+
+$ rabbitmqadmin get queue='hello'
+После чего попробуйте отключить одну из нод, желательно ту, к которой подключались из скрипта, затем поправьте параметры подключения в скрипте consumer.py на вторую ноду и запустите его.
+
+Приложите скриншот результата работы второго скрипта.
+
+![Скриншот задания 39](https://github.com/vasya436/gitlab-hw/blob/main/img/task39_screenshot.png)
 
 
+![Скриншот задачи 40](https://github.com/vasya436/gitlab-hw/raw/main/img/task40_screenshot.png)
 
 
+![Скриншот задания 4.1](https://github.com/vasya436/gitlab-hw/blob/main/img/task41_screenshot.png)
 
 
+![Скриншот задания 4.2](https://github.com/vasya436/gitlab-hw/raw/main/img/task42_screenshot.png)
+
+![Скриншот задачи 4.3](https://github.com/vasya436/gitlab-hw/blob/main/img/task43_screenshot.png)
+
+
+![Описание скриншота](https://github.com/vasya436/gitlab-hw/blob/main/img/task44_screenshot.png?raw=true "Скриншот к заданию 4.4")
 
 
 
