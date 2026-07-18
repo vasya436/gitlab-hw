@@ -180,4 +180,42 @@ zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psq
 
 Настройка конфигурационных файлов ELK и filebeat на серверах
 
+![task26_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task26_screenshot.png)
+
+![task27_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task27_screenshot.png)
+
+![task28_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task28_screenshot.png)
+
+![task29_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task29_screenshot.png)
+
+![task30_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task30_screenshot.png)
+
+![task31_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task31_screenshot.png)
+
+![task32_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task32_screenshot.png)
+
+![task33_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task33_screenshot.png)
+
+![task34_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task34_screenshot.png)
+
+Настройка конфигурационных файлов zabbix и zabbix-agent
+
+![task35_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task35_screenshot.png)
+
+![task36_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task36_screenshot.png)
+
+![task37_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task37_screenshot.png)
+
+![task38_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task38_screenshot.png)
+
+![task39_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task39_screenshot.png)
+
+Создание snapshot дисков всех ВМ В консоле yandex cloud настраиваю снимки дисков всех ВМ с ограниченным временем жизни в 7 дней. Сами снимки настроенны на ежедневное копирование
+
+![task40_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task40_screenshot.png)
+
+Снимки дисков на следующий день
+
+![task42_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task42_screenshot.png)
+
 
