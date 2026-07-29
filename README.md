@@ -1,221 +1,111 @@
-# Курсовая работа на профессии "DevOps-инженер с нуля"  Василий Ткаченко
-Содержание
-==========
-* [Задача](#Задача)
-* [Инфраструктура](#Инфраструктура)
-    * [Сайт](#Сайт)
-    * [Мониторинг](#Мониторинг)
-    * [Логи](#Логи)
-    * [Сеть](#Сеть)
-    * [Резервное копирование](#Резервное-копирование)
-    * [Дополнительно](#Дополнительно)
-* [Выполнение работы](#Выполнение-работы)
-* [Критерии сдачи](#Критерии-сдачи)
-* [Как правильно задавать вопросы дипломному руководителю](#Как-правильно-задавать-вопросы-дипломному-руководителю) 
+# Домашнее задание к занятию «Системы контроля версий»
 
 ---------
-## Задача
-Ключевая задача — разработать отказоустойчивую инфраструктуру для сайта, включающую мониторинг, сбор логов и резервное копирование основных данных. Инфраструктура должна размещаться в [Yandex Cloud](https://cloud.yandex.com/).
+## Цель задания
 
-**Примечание**: в курсовой работе используется система мониторинга Prometheus. Вместо Prometheus вы можете использовать Zabbix. Задание для курсовой работы с использованием Zabbix находится по [ссылке](https://github.com/netology-code/fops-sysadm-diplom/blob/diplom-zabbix/README.md).
+В результате выполнения задания вы:
 
-**Перед началом работы над дипломным заданием изучите [Инструкция по экономии облачных ресурсов](https://github.com/netology-code/devops-materials/blob/master/cloudwork.MD).**   
+    научитесь подготоваливать новый репозиторий к работе;
+    сохранять, перемещать и удалять файлы в системе контроля версий.
 
-## Инфраструктура
-Для развёртки инфраструктуры используйте Terraform и Ansible. 
+Чеклист готовности к домашнему заданию
 
-Параметры виртуальной машины (ВМ) подбирайте по потребностям сервисов, которые будут на ней работать. 
+    Установлена консольная утилита для работы с Git.
 
-Ознакомьтесь со всеми пунктами из этой секции, не беритесь сразу выполнять задание, не дочитав до конца. Пункты взаимосвязаны и могут влиять друг на друга.
+Инструкция к заданию
 
-### Сайт
-Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.
+    Домашнее задание выполните в GitHub-репозитории.
+    В личном кабинете отправьте на проверку ссылку на ваш репозиторий с домашним заданием.
+    Любые вопросы по решению задач задавайте в разделе "Вопросы по заданию".
 
-Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.
+Дополнительные материалы для выполнения задания
 
-Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
+    GitHub.
+    Инструкция по установке Git.
+    Книга про Git на русском языке - рекомендуем к обязательному изучению главы 1-7.
 
-Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
+## Задание 1. Создать и настроить репозиторий для дальнейшей работы на курсе
 
-Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.
+В рамках курса вы будете писать скрипты и создавать конфигурации для различных систем, которые необходимо сохранять для будущего использования. Сначала надо создать и настроить локальный репозиторий, после чего добавить удалённый репозиторий на GitHub.
+Создание репозитория и первого коммита
 
-Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.
+    Зарегистрируйте аккаунт на https://github.com/. Если предпочитаете другое хранилище для репозитория, можно использовать его.
 
-Протестируйте сайт
-`curl -v <публичный IP балансера>:80` 
+    Создайте публичный репозиторий, который будете использовать дальше на протяжении всего курса, желательное с названием devops-netology. Обязательно поставьте галочку Initialize this repository with a README.
+    
 
-### Мониторинг
-Создайте ВМ, разверните на ней Prometheus. На каждую ВМ из веб-серверов установите Node Exporter и [Nginx Log Exporter](https://github.com/martin-helmich/prometheus-nginxlog-exporter). Настройте Prometheus на сбор метрик с этих exporter.
+Создайте авторизационный токен для клонирования репозитория.
 
-Создайте ВМ, установите туда Grafana. Настройте её на взаимодействие с ранее развернутым Prometheus. Настройте дешборды с отображением метрик, минимальный набор — Utilization, Saturation, Errors для CPU, RAM, диски, сеть, http_response_count_total, http_response_size_bytes. Добавьте необходимые [tresholds](https://grafana.com/docs/grafana/latest/panels/thresholds/) на соответствующие графики.
+Склонируйте репозиторий, используя протокол HTTPS (git clone ...).
 
-### Логи
-Cоздайте ВМ, разверните на ней Elasticsearch. Установите filebeat в ВМ к веб-серверам, настройте на отправку access.log, error.log nginx в Elasticsearch.
 
-Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
 
-### Сеть
-Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.
+    Перейдите в каталог с клоном репозитория (cd devops-netology).
 
-Настройте [Security Groups](https://cloud.yandex.com/docs/vpc/concepts/security-groups) соответствующих сервисов на входящий трафик только к нужным портам.
+    Произведите первоначальную настройку Git, указав своё настоящее имя, чтобы нам было проще общаться, и email (git config --global user.name и git config --global user.email johndoe@example.com).
 
-Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.
+    Выполните команду git status и запомните результат.
 
-### Резервное копирование
-Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
+    Отредактируйте файл README.md любым удобным способом, тем самым переведя файл в состояние Modified.
 
-Выполненние курсовой работы
+    Ещё раз выполните git status и продолжайте проверять вывод этой команды после каждого следующего шага.
 
-Инфраструктура
+    Теперь посмотрите изменения в файле README.md, выполнив команды git diff и git diff --staged.
 
-Для развёртывания инфраструктуры были использованны Terraform и Ansible.
+    Переведите файл в состояние staged (или, как говорят, просто добавьте файл в коммит) командой git add README.md.
 
-При помощи terraform в yandex облаке была развёрнута сеть из шести виртуальных машин, 5 из которых ubuntu 22.04 и одна vm Debian 11. Названия vm ubuntu 22.04:
+    И ещё раз выполните команды git diff и git diff --staged. Поиграйте с изменениями и этими командами, чтобы чётко понять, что и когда они отображают.
 
-vm-1;
+    Теперь можно сделать коммит git commit -m 'First commit'.
 
-vm-2;
+    И ещё раз посмотреть выводы команд git status, git diff и git diff --staged.
 
-elstic-server;
+Создание файлов .gitignore и второго коммита
 
-kibana-server;
+    Создайте файл .gitignore (обратите внимание на точку в начале файла), проверьте его статус сразу после создания.
+    Добавьте файл .gitignore в следующий коммит (git add...).
+    На одном из следующих блоков вы будете изучать Terraform, давайте сразу создадим соотвествующий каталог terraform и внутри этого каталога — файл .gitignore по примеру: https://github.com/github/gitignore/blob/master/Terraform.gitignore.
+    В файле README.md опишите своими словами, какие файлы будут проигнорированы в будущем благодаря добавленному .gitignore.
+    Закоммитьте все новые и изменённые файлы. Комментарий к коммиту должен быть Added gitignore.
 
-bastion;
+Эксперимент с удалением и перемещением файлов (третий и четвёртый коммит)
 
-vm Debian 11:
+    Создайте файлы will_be_deleted.txt (с текстом will_be_deleted) и will_be_moved.txt (с текстом will_be_moved) и закоммите их с комментарием Prepare to delete and move.
+    В случае необходимости обратитесь к официальной документации — здесь подробно описано, как выполнить следующие шаги.
+    Удалите файл will_be_deleted.txt с диска и из репозитория.
+    Переименуйте (переместите) файл will_be_moved.txt на диске и в репозитории, чтобы он стал называться has_been_moved.txt.
+    Закоммитьте результат работы с комментарием Moved and deleted.
 
-zabbix-server;
+Проверка изменения
 
-Виртуальные машины vm-1 и vm-2 располагаются в разных зонах
-![task10_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task10_screenshot.png)
+    В результате предыдущих шагов в репозитории должно быть как минимум пять коммитов (если вы сделали ещё промежуточные — нет проблем):
+        Initial Commit — созданный GitHub при инициализации репозитория.
+        First commit — созданный после изменения файла README.md.
+        Added gitignore — после добавления .gitignore.
+        Prepare to delete and move — после добавления двух временных файлов.
+        Moved and deleted — после удаления и перемещения временных файлов.
+    Проверьте это, используя комманду git log. Подробно о формате вывода этой команды мы поговорим на следующем занятии, но посмотреть, что она отображает, можно уже сейчас.
 
-Затем через ansible устанавливаю на сервера vm-1, vm-2 nginx и статические файлы сайта:
+Отправка изменений в репозиторий
 
-![task11_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task11_screenshot.png)
+Выполните команду git push, если Git запросит логин и пароль — введите ваши логин и пароль от GitHub.
 
-Настраиваю файл /etc/nginx/sites-available/
+В качестве результата отправьте ссылку на репозиторий.
+Правила приёма домашнего задания
 
-![task12_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task12_screenshot.png)
+В личном кабинете отправлена ссылка на ваш репозиторий.
+Критерии оценки
 
-С применением ansible устанавливаю на сервера приложения соответствующие их названиям:
+Зачёт:
 
-![task13_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task13_screenshot.png)
+    выполнены все задания;
+    ответы даны в развёрнутой форме;
+    приложены соответствующие скриншоты и файлы проекта;
+    в выполненных заданиях нет противоречий и нарушения логики.
 
-![task14_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task14_screenshot.png)
+На доработку:
 
-Устанавливаю через ansible, java на vm elastic-server, kibana-server
-
-![task15_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task15_screenshot.png)
-
-Использую ansible для установки filebeat на серврера vm-1, vm-2
-
-![task16_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task16_screenshot.png)
-
-
-Установка zabbix на сервере:
-
-Установка PostgreSQL: sudo apt install postgresql
-
-Установка репозиторий Zabbix:
-
-wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/zabbix-release_6.0-4+debian11_all.deb
-
-dpkg -i zabbix-release_6.0-4+debian11_all.deb
-
-apt update
-
-Установка Zabbix сервера, веб-интерфейса и агента:
-
-apt install zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
-
-Создаём базу данных:
-
-sudo -u postgres createuser --pwprompt zabbix
-sudo -u postgres createdb -O zabbix zabbix
-На хосте Zabbix сервера импортируйте начальную схему и данные. 
-
-Вам будет предложено ввести недавно созданный пароль:
-
-zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
-
-Настраиваем базу данных для Zabbix сервера Отредактируем файл /etc/zabbix/zabbix_server.conf: DBPassword=password
-
-Запускаем процессы Zabbix сервера и агента Запускаем процессы Zabbix сервера и агента и настраиваем их запуск при загрузке ОС.
-
-Открываем веб-страницу Zabbix: http://host/zabbix
-
-![task17_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task17_screenshot.png)
-
-Устанавливаю на серверах vm-1,vm-2 репозиторий zabbix и устанавливаю zabbix-agent.
-
-Используя terraform настраиваю сеть в соответствии с заданием: Развёрнут один VPC. Сервера web, Elasticsearch помещены в приватные подсети. Сервера Zabbix, Kibana, application load balancer определенны в публичную подсеть.
-
-![task18_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task18_screenshot.png)
-
-
-При помощи системы terraform устанавливаю в созданной инфраструктуре: Target Group, Backend Group, HTTP router, Application load balancer В Target Group включаю две созданных ВМ vm-1, vm-2
-
-![task19_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task19_screenshot.png)
-
-![task20_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task20_screenshot.png)
-
-
-С применением terraform настраиваю Security Groups соответствующих сервисов на входящий трафик только к нужным портам
-
-![task21_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task21_screenshot.png)
-
-![task22_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task22_screenshot.png)
-
-![task23_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task23_screenshot.png)
-
-Состояние балансировщика
-
-![task24_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task24_screenshot.png)
-
-При введении в браузер публичного адреса балансировщика открывается сайт (статические файлы сайта на vm-1, vm-2)
-
-![task25_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task25_screenshot.png)
-
-Через bastion, подключаюсь к виртуальным машинам по их внутренним IP адресам, для настройки конфигурационных файлов:
-
-Настройка конфигурационных файлов ELK и filebeat на серверах
-
-![task26_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task26_screenshot.png)
-
-![task27_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task27_screenshot.png)
-
-![task28_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task28_screenshot.png)
-
-![task29_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task29_screenshot.png)
-
-![task30_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task30_screenshot.png)
-
-![task31_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task31_screenshot.png)
-
-![task32_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task32_screenshot.png)
-
-![task33_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task33_screenshot.png)
-
-![task34_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task34_screenshot.png)
-
-Настройка конфигурационных файлов zabbix и zabbix-agent
-
-![task35_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task35_screenshot.png)
-
-![task36_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task36_screenshot.png)
-
-![task37_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task37_screenshot.png)
-
-![task38_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task38_screenshot.png)
-
-![task39_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task39_screenshot.png)
-
-Создание snapshot дисков всех ВМ В консоле yandex cloud настраиваю снимки дисков всех ВМ с ограниченным временем жизни в 7 дней. Сами снимки настроенны на ежедневное копирование
-
-![task40_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task40_screenshot.png)
-
-Снимки дисков на следующий день
-
-![task42_screenshot](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task42_screenshot.png)
+    задание выполнено частично или не выполнено вообще;
+    в логике выполнения заданий есть противоречия и существенные недостатки.
 
 
