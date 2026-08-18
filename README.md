@@ -1,107 +1,166 @@
-# Домашнее задание к занятию «Инструменты Git» 
+# Домашнее задание к занятию 4 «Оркестрация группой Docker контейнеров на примере Docker Compose»
 
-Цель задания
 
-В результате выполнения задания вы:
+## Задача 1
 
-    научитесь работать с утилитами Git;
-    потренируетесь решать типовые задачи, возникающие при работе в команде.
+Сценарий выполнения задачи:
+- Установите docker и docker compose plugin на свою linux рабочую станцию или ВМ.
+- Если dockerhub недоступен создайте файл /etc/docker/daemon.json с содержимым: ```{"registry-mirrors": ["https://mirror.gcr.io", "https://daocloud.io", "https://c.163.com/", "https://registry.docker-cn.com"]}```
+- Зарегистрируйтесь и создайте публичный репозиторий  с именем "custom-nginx" на https://hub.docker.com (ТОЛЬКО ЕСЛИ У ВАС ЕСТЬ ДОСТУП);
+- скачайте образ nginx:1.21.1;
+- Создайте Dockerfile и реализуйте в нем замену дефолтной индекс-страницы(/usr/share/nginx/html/index.html), на файл index.html с содержимым:
+```
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+</html>
+```
 
-Инструкция к заданию
+Соберите и отправьте созданный образ в свой dockerhub-репозитории c tag 1.0.0 (ТОЛЬКО ЕСЛИ ЕСТЬ ДОСТУП).
+Предоставьте ответ в виде ссылки на https://hub.docker.com/<username_repo>/custom-nginx/general .
 
-    Склонируйте репозиторий с исходным кодом Terraform.
-    Создайте файл для ответов на задания в своём репозитории, после выполнения прикрепите ссылку на .md-файл с ответами в личном кабинете.
-    Любые вопросы по решению задач задавайте в разделе "Вопросы по заданию".
 
-Задание
 
-В клонированном репозитории:
+![Скриншот задания (task50)](https://github.com/vasya436/gitlab-hw/blob/main/img/task50_screenshot.png)
 
-    Найдите полный хеш и комментарий коммита, хеш которого начинается на aefea.
-    Ответьте на вопросы.
 
-    Какому тегу соответствует коммит 85024d3?
-    Сколько родителей у коммита b8d720? Напишите их хеши.
-    Перечислите хеши и комментарии всех коммитов, которые были сделаны между тегами v0.12.23 и v0.12.24.
-    Найдите коммит, в котором была создана функция func providerSource, её определение в коде выглядит так: func providerSource(...) (вместо троеточия перечислены аргументы).
-    Найдите все коммиты, в которых была изменена функция globalPluginDirs.
-    Кто автор функции synchronizedWriters?
+![Скриншот задания (task51)](https://github.com/vasya436/gitlab-hw/raw/main/img/task51_screenshot.png)
 
-В качестве решения ответьте на вопросы и опишите, как были получены эти ответы.
+## Задача 2
+1. Запустите ваш образ custom-nginx:1.0.0 командой docker run в соответвии с требованиями:
+- имя контейнера "ФИО-custom-nginx-t2"
+- контейнер работает в фоне
+- контейнер опубликован на порту хост системы 127.0.0.1:8080
+2. Переименуйте контейнер в "custom-nginx-t2"
+3. Выполните команду ```date +"%d-%m-%Y %T.%N %Z" ; sleep 0.150 ; docker ps ; ss -tlpn | grep 127.0.0.1:8080  ; docker logs custom-nginx-t2 -n1 ; docker exec -it custom-nginx-t2 base64 /usr/share/nginx/html/index.html```
+4. Убедитесь с помощью curl или веб браузера, что индекс-страница доступна.
 
-    В личном кабинете отправьте на проверку ссылки на ваши репозитории.
-    Любые вопросы по решению задач задавайте в разделе "Вопросы по заданию".
-    
-1. aefead2207ef7e2aa5dc81a34aedf0cad4c32545 хэш комментарий -Update CHANGELOG.md
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
 
-   git log --format="%H %s" | grep "^aefea"
+---
+### Ответ
 
-2. коммит 85024d3 соответствует тэгу v0.12.23
-v0.12.24
-v0.12.25
-v0.12.26
-v0.12.27
-v0.12.28
-v0.12.29
-v0.12.30
-v0.12.31
+![Рис. 2. Скриншот задания 52](https://github.com/vasya436/gitlab-hw/raw/main/img/task52_screenshot.png)
+
+---
+
+## Задача 3
+1. Воспользуйтесь docker help или google, чтобы узнать как подключиться к стандартному потоку ввода/вывода/ошибок контейнера "custom-nginx-t2".
+2. Подключитесь к контейнеру и нажмите комбинацию Ctrl-C.
+3. Выполните ```docker ps -a``` и объясните своими словами почему контейнер остановился.
+4. Перезапустите контейнер
+5. Зайдите в интерактивный терминал контейнера "custom-nginx-t2" с оболочкой bash.
+6. Установите любимый текстовый редактор(vim, nano итд) с помощью apt-get.
+7. Отредактируйте файл "/etc/nginx/conf.d/default.conf", заменив порт "listen 80" на "listen 81".
+8. Запомните(!) и выполните команду ```nginx -s reload```, а затем внутри контейнера ```curl http://127.0.0.1:80 ; curl http://127.0.0.1:81```.
+9. Выйдите из контейнера, набрав в консоли  ```exit``` или Ctrl-D.
+10. Проверьте вывод команд: ```ss -tlpn | grep 127.0.0.1:8080``` , ```docker port custom-nginx-t2```, ```curl http://127.0.0.1:8080```. Кратко объясните суть возникшей проблемы.
+11. * Это дополнительное, необязательное задание. Попробуйте самостоятельно исправить конфигурацию контейнера, используя доступные источники в интернете. Не изменяйте конфигурацию nginx и не удаляйте контейнер. Останавливать контейнер можно. [пример источника](https://www.baeldung.com/linux/assign-port-docker-container)
+12. Удалите запущенный контейнер "custom-nginx-t2", не останавливая его.(воспользуйтесь --help или google)
+
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
+---
+### Ответ
+
+![Рис. 3. Скриншот задания 53](https://github.com/vasya436/gitlab-hw/raw/main/img/task53_screenshot.png)
+
+Комбинация Ctrl-C передает контейнеру сигнал SIGINT, тем самым завершает его основной процесс и контейнер останавливается.
+
+
+---
+
+## Задача 4
+
+
+- Запустите первый контейнер из образа ***centos*** c любым тегом в фоновом режиме, подключив папку  текущий рабочий каталог ```$(pwd)``` на хостовой машине в ```/data``` контейнера, используя ключ -v.
+- Запустите второй контейнер из образа ***debian*** в фоновом режиме, подключив текущий рабочий каталог ```$(pwd)``` в ```/data``` контейнера. 
+- Подключитесь к первому контейнеру с помощью ```docker exec``` и создайте текстовый файл любого содержания в ```/data```.
+- Добавьте ещё один файл в текущий каталог ```$(pwd)``` на хостовой машине.
+- Подключитесь во второй контейнер и отобразите листинг и содержание файлов в ```/data``` контейнера.
+
+
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
+
+---
+### Ответ
+
+![Рис. 4. Скриншот задания 54](https://github.com/vasya436/gitlab-hw/raw/main/img/task54_screenshot.png)
+
+
+---
+
+
+## Задача 5
+
+1. Создайте отдельную директорию(например /tmp/netology/docker/task5) и 2 файла внутри него.
+"compose.yaml" с содержимым:
+```
+version: "3"
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    network_mode: host
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+"docker-compose.yaml" с содержимым:
+```
+version: "3"
+services:
+  registry:
+    image: registry:2
+    network_mode: host
+    ports:
+    - "5000:5000"
+```
+
+И выполните команду "docker compose up -d". Какой из файлов был запущен и почему? (подсказка: https://docs.docker.com/compose/compose-application-model/#the-compose-file )
+
+2. Отредактируйте файл compose.yaml так, чтобы были запущенны оба файла. (подсказка: https://docs.docker.com/compose/compose-file/14-include/)
+
+3. Выполните в консоли вашей хостовой ОС необходимые команды чтобы залить образ custom-nginx как custom-nginx:latest в запущенное вами, локальное registry. Дополнительная документация: https://distribution.github.io/distribution/about/deploying/
+4. Откройте страницу "https://127.0.0.1:9000" и произведите начальную настройку portainer.(логин и пароль адмнистратора)
+5. Откройте страницу "http://127.0.0.1:9000/#!/home", выберите ваше local  окружение. Перейдите на вкладку "stacks" и в "web editor" задеплойте следующий компоуз:
+
+```
+version: '3'
+
+services:
+  nginx:
+    image: 127.0.0.1:5000/custom-nginx
+    ports:
+      - "9090:80"
+```
+6. Перейдите на страницу "http://127.0.0.1:9000/#!/2/docker/containers", выберите контейнер с nginx и нажмите на кнопку "inspect". В представлении <> Tree разверните поле "Config" и сделайте скриншот от поля "AppArmorProfile" до "Driver".
+
+7. Удалите любой из манифестов компоуза(например compose.yaml).  Выполните команду "docker compose up -d". Прочитайте warning, объясните суть предупреждения и выполните предложенное действие. Погасите compose-проект ОДНОЙ(обязательно!!) командой.
+
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод, файл compose.yaml , скриншот portainer c задеплоенным компоузом.
+
+---
+
+![Рис. 5. Скриншот задания 55](https://github.com/vasya436/gitlab-hw/raw/main/img/task55_screenshot.png)
+
+![Рис. 6. Скриншот задания 56](https://github.com/vasya436/gitlab-hw/raw/main/img/task56_screenshot.png)
+
+зашел в Portainer по токену, обнаружив его в логах контейнера docker logs
+
+![Рис. 7. Скриншот задания 57](https://github.com/vasya436/gitlab-hw/raw/main/img/task57_screenshot.png)
+
+![Рис. 8. Скриншот задания 58](https://github.com/vasya436/gitlab-hw/raw/main/img/task58_screenshot.png)
+
+![Рис. 9. Скриншот задания 59](https://github.com/vasya436/gitlab-hw/raw/main/img/task59_screenshot.png)
+
+![Рис. 10. Скриншот задания 60](https://github.com/vasya436/gitlab-hw/raw/main/img/task60_screenshot.png)
+
+![Рис. 11. Скриншот задания 61](https://github.com/vasya436/gitlab-hw/raw/main/img/task61_screenshot.png)
+
+
+
  
-git tag --contains 85024d3
-
-3. у коммита b8d720 2 родителей: b8d720
-   
-56cd7859e05c36c06b56d013b55a252d0bb7e158 9ea88f22fc6269854151c571162c5bcf958bee2b
-
-git show --format="%P" -s b8d720
-
-4. Перечислите хеши и комментарии всех коммитов, которые были сделаны между тегами v0.12.23 и v0.12.24
-
-   git log v0.12.23..v0.12.24 --format="%H %s"
-   
-| Commit Hash | Message |
-| --- | --- |
-| `33ff1c03bb960b332be3af2e333462dde88b279e` | v0.12.24 |
-| `b14b74c4939dcab573326f4e3ee2a62e23e12f89` | [Website] vmc provider links |
-| `3f235065b9347a758efadc92295b540ee0a5e26e` | Update CHANGELOG.md |
-| `6ae64e247b332925b872447e9ce869657281c2bf` | registry: Fix panic when server is unreachable |
-| `5c619ca1baf2e21a155fcdb4c264cc9e24a2a353` | website: Remove links to the getting started guide's old location |
-| `06275647e2b53d97d4f0a19a0fec11f6d69820b5` | Update CHANGELOG.md |
-| `d5f9411f5108260320064349b757f55c09bc4b80` | command: Fix bug when using terraform login on Windows |
-| `4b6d06cc5dcb78af637bbb19c198faff37a066ed` | Update CHANGELOG.md |
-| `dd01a35078f040ca984cdd349f18d0b67e486c35` | Update CHANGELOG.md |
-| `225466bc3e5f35baa5d07197bbc079345b77525e` | Cleanup after v0.12.23 release |
-
-5. Найдите коммит, в котором была создана функция func providerSource(...)
-   
- команда - git show $(git log -S "func providerSource" --format=%H | tail -1)
-
-   8c928e83589d90a031f811fae52a81be7153e82f
-
-6. Найдите все коммиты, в которых была изменена функция globalPluginDirs
-
-   команда -  git log -p -S "globalPluginDirs"
-
-   commit 7c4aeac5f30aed09c5ef3198141b033eea9912be
-
-7. Кто автор функции synchronizedWriters
-
-   найти коммит, где функция впервые появилась
-   команда - git log -S "synchronizedWriters" --format="%H" | tail -1
-
-commit 5ac311e2a91e381e2f52234668b49ba670aa0fe5
-
-получить автора:
-
-команда - git show --format="%an <%ae>" $(git log -S "synchronizedWriters" --format=%H | tail -1)
-   
-Martin Atkins <mart@degeneration.co.uk>
-   
-
-
-
-
-
-
-
----------
-## 
