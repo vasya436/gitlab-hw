@@ -78,7 +78,8 @@ See 'snap info docker' for additional versions.
 5. (Необязательная часть) Дополнительно настройте remote ssh context к вашему серверу. Отобразите список контекстов и результат удаленного выполнения ```docker ps -a```
 6. Повторите SQL-запрос на сервере и приложите скриншот и ссылку на fork.
    
-![Рис. 16. Изображение 6](https://github.com/vasya436/gitlab-hw/raw/main/img/image.6.png)
+![Рис. 18. Изображение 21](https://github.com/vasya436/gitlab-hw/raw/main/img/img21.jpg)
+
 
 ссылка на мой Fork репозиторий - https://github.com/vasya436/shvirtd-example-python
 
