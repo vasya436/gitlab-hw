@@ -1,504 +1,120 @@
-# Домашнее задание к занятию «Основы Terraform. Yandex Cloud» Василий Ткаченко
 
-### Цель задания
-
-1. Создать свои ресурсы в облаке Yandex Cloud с помощью Terraform.
-2. Освоить работу с переменными Terraform.
-
-
-### Чеклист готовности к домашнему заданию
-
-1. Зарегистрирован аккаунт в Yandex Cloud. Использован промокод на грант.
-2. Установлен инструмент Yandex Cli.
-3. Исходный код для выполнения задания расположен в директории [**02/src**](https://github.com/netology-code/ter-homeworks/tree/main/02/src).
-
-
-### Задание 0
-
-1. Ознакомьтесь с [документацией к security-groups в Yandex Cloud](https://cloud.yandex.ru/docs/vpc/concepts/security-groups?from=int-console-help-center-or-nav).
-2. Запросите preview доступ к данному функционалу в ЛК Yandex Cloud. Обычно его выдают в течении 24-х часов.
-https://console.cloud.yandex.ru/folders/<ваш cloud_id>/vpc/security-groups.   
-Этот функционал понадобится к следующей лекции. 
+# Домашнее задание к занятию «Продвинутые методы работы с Terraform»  Василий Ткаченко
 
 ### Задание 1
 
-В качестве ответа всегда полностью прикладывайте ваш terraform-код в git.
+1. Возьмите из [демонстрации к лекции готовый код](https://github.com/netology-code/ter-homeworks/tree/main/04/demonstration1) для создания ВМ с помощью remote-модуля.
+2. Создайте одну ВМ, используя этот модуль. В файле cloud-init.yml необходимо использовать переменную для ssh-ключа вместо хардкода. Передайте ssh-ключ в функцию template_file в блоке vars ={} .
+Воспользуйтесь [**примером**](https://grantorchard.com/dynamic-cloudinit-content-with-terraform-file-templates/). Обратите внимание, что ssh-authorized-keys принимает в себя список, а не строку.
+3. Добавьте в файл cloud-init.yml установку nginx.
+4. Предоставьте скриншот подключения к консоли и вывод команды ```sudo nginx -t```.
 
-1. Изучите проект. В файле variables.tf объявлены переменные для Yandex provider.
-2. Переименуйте файл personal.auto.tfvars_example в personal.auto.tfvars. Заполните переменные: идентификаторы облака, токен доступа. Благодаря .gitignore этот файл не попадёт в публичный репозиторий. Вы можете выбрать иной способ безопасно передать секретные данные в terraform.
-3. Сгенерируйте или используйте свой текущий ssh-ключ. Запишите его открытую часть в переменную vms_ssh_root_key.
-4. Инициализируйте проект, выполните код. Исправьте намеренно допущенные синтаксические ошибки. Ищите внимательно, посимвольно. Ответьте, в чём заключается их суть.
-5. Ответьте, как в процессе обучения могут пригодиться параметры preemptible = true и core_fraction=5 в параметрах ВМ. Ответ в документации Yandex Cloud.
+### Решение 1
 
-В качестве решения приложите:
+1. Склонировал код из демонстрации, изучал его.
 
-* скриншот ЛК Yandex Cloud с созданной ВМ;
-* скриншот успешного подключения к консоли ВМ через ssh. К OS ubuntu необходимо подключаться под пользователем ubuntu: "ssh ubuntu@vm_ip_address";
-* ответы на вопросы.
+2. Создаю одну ВМ используя модуль. Чтобы создать именно одну ВМ потребовалось указать параметр ```instance_count  = 1``` в модуле ```test-vm```.
 
-### Ответы:
-4.
-```
-resource "yandex_compute_instance" "platform" {
-  name        = "netology-develop-platform-web"
-  platform_id = "standart-v4"
-  resources {
-    cores         = 1
-    memory        = 1
-    core_fraction = 5
-  }
-``` 
-Ошибка синтаксиса, должно быть ```standard```, при этом максимальная версия из документации подразумевает ```v3```, но с параметрами производительности 5% доступны платформы Intel Broadwell (standard-v1) и Intel Cascade Lake (standard-v2). Также минимальное количество ядер может быть 2  
-5. 
-```preemptible = true``` - определяет прерываемость ВМ. Это виртуальные машины, которые могут быть принудительно остановлены в любой момент
+Чтобы передать ssh-ключ используя функцию template_file пишу в блок vars следующий код:
 
-```core_fraction=5``` - определяет производительность в %. Этот уровень определяет долю вычислительного времени физических ядер, которую гарантирует vCPU.
+![Img 1](https://github.com/vasya436/gitlab-hw/raw/main/img/img_1.png)
 
-Для целей обучения это полезно, т.к. позволяет снизить цену создаваемых ВМ.
+Использую такую конструкцию именно потому, что в задании указано условие, что переменная authorized-keys должна принимать в себя список, а не строку.
 
-![Task 1.1](https://github.com/vasya436/gitlab-hw/raw/main/img/task_1_1.png)
+Сама переменная ssh-authorized-keys выглядит следующим образом:
 
-![Task 1.2](https://github.com/vasya436/gitlab-hw/raw/main/img/task_1_2.png)
+![Img 2](https://github.com/vasya436/gitlab-hw/raw/main/img/img_2.png)
 
+3. Чтобы установить nginx на хост используя cloud-init.yml, нужно в секцию ```packages``` добавить строку ``` - nginx```. В нашем случае после запуска виртуальной машины выполняются следующие действия: обновляется кэш пакетов системы, устанавливается текстовый редактор vim и устанавливается nginx.
 
+Проверяю, что nginx установился:
 
-     ---
+![Img 4](https://github.com/vasya436/gitlab-hw/raw/main/img/img_4.png)
+
+------
 
 ### Задание 2
 
-1. Изучите файлы проекта.
-2. Замените все хардкод-значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.
-3. Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.
-4. Проверьте terraform plan. Изменений быть не должно.
+1. Напишите локальный модуль vpc, который будет создавать 2 ресурса: **одну** сеть и **одну** подсеть в зоне, объявленной при вызове модуля, например: ```ru-central1-a```.
+2. Вы должны передать в модуль переменные с названием сети, zone и v4_cidr_blocks.
+3. Модуль должен возвращать в root module с помощью output информацию о yandex_vpc_subnet. Пришлите скриншот информации из terraform console о своем модуле. Пример: > module.vpc_dev  
+4. Замените ресурсы yandex_vpc_network и yandex_vpc_subnet созданным модулем. Не забудьте передать необходимые параметры сети из модуля vpc в модуль с виртуальной машиной.
+5. Откройте terraform console и предоставьте скриншот содержимого модуля. Пример: > module.vpc_dev.
+6. Сгенерируйте документацию к модулю с помощью terraform-docs.    
+ 
+Пример вызова
 
-### Ответы:
-
-Изменим main.tf:
 ```
-data "yandex_compute_image" "ubuntu" {
-  family = var.vm_web_family
-}
-resource "yandex_compute_instance" "platform" {
-  name        = var.vm_web_name
-  platform_id = var.vm_web_platform_id
-  resources {
-    cores         = var.vm_web_cores
-    memory        = var.vm_web_memory
-    core_fraction = var.vm_web_core_fraction
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = true
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
-  }
-
-  metadata = {
-    serial-port-enable = 1
-    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
-  }
-
+module "vpc_dev" {
+  source       = "./vpc"
+  env_name     = "develop"
+  zone = "ru-central1-a"
+  cidr = "10.0.1.0/24"
 }
 ```
-Добавим новые переменные в variables.tf:
-```
-variable "vm_web_family" {
-  type = string
-  default = "ubuntu-2004-lts"
-}
 
-variable "vm_web_name" {
-  type = string
-  default = "netology-develop-platform-web"
-}
+### Решение 2
 
-variable "vm_web_platform_id" {
-  type = string
-  default = "standard-v1"
-}
+1. Написал локальный модуль с одной сетью и одной подсетью в зоне ```ru-central1-a```.
 
-variable "vm_web_cores" {
-  type = number
-  default = 2
-}
+2. В модуле используются переменные с именем сети, зоны и cidr блок:
 
-variable "vm_web_memory" {
-  type = number
-  default = 1
-}
+![Img 5 (1)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_5%20(1).png)
 
-variable "vm_web_core_fraction" {
-  type = number
-  default = 5
-}
-```
-Выполним ```terraform plan```
+3. В terraform console проверю, какой output будет показан при вызове модуля ```module.vpc_dev```:
 
+![Img 6](https://github.com/vasya436/gitlab-hw/raw/main/img/img_6.png)
 
----
+4. Заменил сетевые ресурсы созданным модулем:
+
+![Img 7 (1)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_7%20(1).png)
+
+5. В root модуле написал следующий output:
+
+![Img 8 (2)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_8%20(2).png)
+
+Вывод ```module.vpc_dev``` не изменился:
+
+![Img 9](https://github.com/vasya436/gitlab-hw/raw/main/img/img_9.png)
+
+6. С помощью terraform-docs сгенерировал файл документации.
+
+![Img 10](https://github.com/vasya436/gitlab-hw/raw/main/img/img_10.png)
 
 ### Задание 3
+1. Выведите список ресурсов в стейте.
+2. Полностью удалите из стейта модуль vpc.
+3. Полностью удалите из стейта модуль vm.
+4. Импортируйте всё обратно. Проверьте terraform plan. Изменений быть не должно.
+Приложите список выполненных команд и скриншоты процессы.
 
-1. Создайте в корне проекта файл 'vms_platform.tf'. Перенесите в него все переменные первой ВМ.
-2. Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: "netology-develop-platform-db" , cores = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом vm_db_ в том же файле ('vms_platform.tf').
-3. Примените изменения.
+### Решение 3
 
-### Ответы:
+1. Текущий список ресурсов в стейте:
 
-Создадим новый файл vms_platform.tf, в который перенесем переменные ВМ из файла variables.tf, а так же объявим переменные для новой ВМ:
-```
-variable "vm_web_family" {
-  type = string
-  default = "ubuntu-2004-lts"
-}
+![Img 11 (1)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_11%20(1).png)
 
-variable "vm_web_name" {
-  type = string
-  default = "netology-develop-platform-web"
-}
+2. Полностью удалил из стейта модуль vpc_dev:
 
-variable "vm_web_platform_id" {
-  type = string
-  default = "standard-v1"
-}
+![Img 12 (1)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_12(1).png)
 
-variable "vm_web_cores" {
-  type = number
-  default = 2
-}
+3. Полностью удалил из стейта модуль test-vm:
 
-variable "vm_web_memory" {
-  type = number
-  default = 1
-}
+![Img 13](https://github.com/vasya436/gitlab-hw/raw/main/img/img_13.png)
 
-variable "vm_web_core_fraction" {
-  type = number
-  default = 5
-}
+4. Обратно импортирую удаленные стейты:
 
-variable "vm_db_name" {
-  type = string
-  default = "netology-develop-platform-db"
-}
+![Img 40](https://github.com/vasya436/gitlab-hw/raw/main/img/img_40.png)
 
-variable "vm_db_platform_id" {
-  type = string
-  default = "standard-v1"
-}
+Аналогично импортирую остальные стейты:
 
-variable "vm_db_cores" {
-  type = number
-  default = 2
-}
+![Img 41 (1)](https://github.com/vasya436/gitlab-hw/raw/main/img/img_41%20(1).png)
 
-variable "vm_db_memory" {
-  type = number
-  default = 2
-}
 
-variable "vm_db_core_fraction" {
-  type = number
-  default = 20
-}
-```
-Скопируем ресурс для создания еще одной ВМ в файле main.tf и подставим объявленные переменные:
-```
-resource "yandex_compute_instance" "platform_2" {
-  name        = var.vm_db_name
-  platform_id = var.vm_db_platform_id
-  resources {
-    cores         = var.vm_db_cores
-    memory        = var.vm_db_memory
-    core_fraction = var.vm_db_core_fraction
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = true
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
-  }
+![Img 42](https://github.com/vasya436/gitlab-hw/raw/main/img/img_42.png)
 
-  metadata = {
-    serial-port-enable = 1
-    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
-  }
+После импортирования модулей изменений не последовало.
 
-}
-```
-Выполним команду ```terraform plan```:
-```
-PS D:\Книги\DevOps\GitHub\ter-homeworks\02\src> terraform plan
-data.yandex_compute_image.ubuntu: Reading...
-yandex_vpc_network.develop: Refreshing state... [id=enprch5ul30gtu4chdid]
-yandex_vpc_subnet.develop: Refreshing state... [id=e9bn0djtt3qjm7fr7q2o]
-data.yandex_compute_image.ubuntu: Read complete after 1s [id=fd8dfofgv8k45mqv25nq]
-yandex_compute_instance.platform: Refreshing state... [id=fhm944hvt8sfr73ajef3]
 
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
-  + create
 
-Terraform will perform the following actions:
-
-  # yandex_compute_instance.platform_2 will be created
-  + resource "yandex_compute_instance" "platform_2" {
-      + created_at                = (known after apply)
-      + folder_id                 = (known after apply)
-      + fqdn                      = (known after apply)
-      + gpu_cluster_id            = (known after apply)
-      + hostname                  = (known after apply)
-      + id                        = (known after apply)
-      + metadata                  = {
-          + "serial-port-enable" = "1"
-          + "ssh-keys"           = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2kpc8hkCtD5uVQdw0wUeGlNp/rKarSrCKoifhuRtCF vasya10@vasya10-VirtualBox"
-        }
-      + name                      = "netology-develop-platform-db"
-      + network_acceleration_type = "standard"
-      + platform_id               = "standard-v1"
-      + service_account_id        = (known after apply)
-      + status                    = (known after apply)
-      + zone                      = (known after apply)
-
-      + boot_disk {
-          + auto_delete = true
-          + device_name = (known after apply)
-          + disk_id     = (known after apply)
-          + mode        = (known after apply)
-
-          + initialize_params {
-              + block_size  = (known after apply)
-              + description = (known after apply)
-              + image_id    = "fd8dfofgv8k45mqv25nq"
-              + name        = (known after apply)
-              + size        = (known after apply)
-              + snapshot_id = (known after apply)
-              + type        = "network-hdd"
-            }
-        }
-
-      + network_interface {
-          + index              = (known after apply)
-          + ip_address         = (known after apply)
-          + ipv4               = true
-          + ipv6               = (known after apply)
-          + ipv6_address       = (known after apply)
-          + mac_address        = (known after apply)
-          + nat                = true
-          + nat_ip_address     = (known after apply)
-          + nat_ip_version     = (known after apply)
-          + security_group_ids = (known after apply)
-          + subnet_id          = "e9bn0djtt3qjm7fr7q2o"
-        }
-
-      + resources {
-          + core_fraction = 20
-          + cores         = 2
-          + memory        = 2
-        }
-
-      + scheduling_policy {
-          + preemptible = true
-        }
-    }
-
-Plan: 1 to add, 0 to change, 0 to destroy.
-
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
-
-Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
-```
-Применим изменения:
-
-![Task 3.1](https://github.com/vasya436/gitlab-hw/raw/main/img/task_3_1.png)
-
----
-
-### Задание 4
-
-1. Объявите в файле outputs.tf output типа map, содержащий { instance_name = external_ip } для каждой из ВМ.
-2. Примените изменения.
-В качестве решения приложите вывод значений ip-адресов команды terraform output.
-
-### Ответ:
-Создадим новый файл outputs.tf и добавим в него данные для вывода внешнего ip адреса каждой ВМ:
-```
-output "vm_external_ip_address_web" {
-value = yandex_compute_instance.web.network_interface[0].nat_ip_address
-description = "vm external ip"
-}
-
-output "vm_external_ip_address_db" {
-value = yandex_compute_instance.db.network_interface[0].nat_ip_address
-description = "vm external ip"
-}
-```
-Результат вывода команды ```terraform output```:
-```
-PS D:\Книги\DevOps\GitHub\ter-homeworks\02\src> terraform output      
-vm_external_ip_address_db = "51.250.0.45"
-vm_external_ip_address_web = "51.250.80.16"
-```
-
----
-
-### Задание 5
-
-1. В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
-2. Замените переменные с именами ВМ из файла variables.tf на созданные вами local-переменные.
-3. Примените изменения.
-
-### Ответ:
-
-Добавим данные в файл locals.tf и variables.tf:
-```
-locals {
-  web = "${ var.name }-${ var.env }-${ var.project }-${ var.role[0] }"
-  db = "${ var.name }-${ var.env }-${ var.project }-${ var.role[1] }"
-}
-```
-```
-variable "name" {
-  default     = "netology"
-}
-
-variable "env" {
-  default     = "develop"
-}
-
-variable "project" {
-  default     = "platform"
-}
-
-variable "role" {
-   default = ["web", "db"]
-}
-```
-
----
-
-### Задание 6
-
-1. Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в переменные типа map с именами "vm_web_resources" и "vm_db_resources". В качестве продвинутой практики попробуйте создать одну map-переменную vms_resources и уже внутри неё конфиги обеих ВМ — вложенный map.
-2. Также поступите с блоком metadata {serial-port-enable, ssh-keys}, эта переменная должна быть общая для всех ваших ВМ.
-3. Найдите и удалите все более не используемые переменные проекта.
-4. Проверьте terraform plan. Изменений быть не должно.
-
-### Ответ:
-
-В файл vms_platform.tf добавил переменные vms_resources и vms_metadata с конфигурациями для обеих ВМ:
-```
-variable "vms_resources" {
-  type = map(object({
-    cores = number
-    memory = number
-    core_fraction = number
-  }))
-  default = {
-    vm_web_resources = {
-      cores         = 2
-      memory        = 1
-      core_fraction = 5
-    }
-    vm_db_resources = {
-      cores         = 2
-      memory        = 2
-      core_fraction = 20
-    }
-  }
-}
-
-variable "vms_metadata" {
-  type = map
-  default = {
-    serial-port-enable = 1
-    ssh-keys = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2kpc8hkCtD5uVQdw0wUeGlNp/rKarSrCKoifhuRtCF vasya10@vasya10-VirtualBox"
-  }
-}
-```
-Отредактировал файл main.tf, внес ссылки на новые переменные:
-```
-resource "yandex_compute_instance" "web" {
-  name        = local.web
-  platform_id = var.vm_web_platform_id
-  resources {
-    cores         = var.vms_resources["vm_web_resources"]["cores"]
-    memory        = var.vms_resources["vm_web_resources"]["memory"]
-    core_fraction = var.vms_resources["vm_web_resources"]["core_fraction"]
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = true
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
-  }
-
-  metadata = {
-    serial-port-enable = var.vms_metadata["serial-port-enable"]
-    ssh-keys           = var.vms_metadata["ssh-keys"]
-  }
-
-}
-
-resource "yandex_compute_instance" "db" {
-  name        = local.db
-  platform_id = var.vm_db_platform_id
-  resources {
-    cores         = var.vms_resources["vm_db_resources"]["cores"]
-    memory        = var.vms_resources["vm_db_resources"]["memory"]
-    core_fraction = var.vms_resources["vm_db_resources"]["core_fraction"]
-  }
-  boot_disk {
-    initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
-    }
-  }
-  scheduling_policy {
-    preemptible = true
-  }
-  network_interface {
-    subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
-  }
-
-  metadata = {
-    serial-port-enable = var.vms_metadata["serial-port-enable"]
-    ssh-keys           = var.vms_metadata["ssh-keys"]
-  }
-
-}
-```
-Закоментировал неиспользуемые переменные и запустил команду ```terraform plan```, изменений не внесено:
-```
-PS D:\Книги\DevOps\GitHub\ter-homeworks\02\src> terraform plan
-data.yandex_compute_image.ubuntu: Reading...
-yandex_vpc_network.develop: Refreshing state... [id=enpt9e7o3rjp2r9eobs7]
-data.yandex_compute_image.ubuntu: Read complete after 2s [id=fd8dfofgv8k45mqv25nq]
-yandex_vpc_subnet.develop: Refreshing state... [id=e9b87o9f1j4gq6vhl36d]
-yandex_compute_instance.db: Refreshing state... [id=fhm0acsfkhn0jhrvtf87]
-yandex_compute_instance.web: Refreshing state... [id=fhmoe74jg3ahhp53g8rn]
-
-No changes. Your infrastructure matches the configuration.
-
-Terraform has compared your real infrastructure against your configuration and found no differences, so no changes are needed.
-```
-
----
 
