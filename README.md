@@ -44,5 +44,10 @@
 
 ![Скриншот: шардинг/Docker/Suricata](https://github.com/vasya436/gitlab-hw/raw/main/img/img_010.png){width=700}
 
+[Vector Role](https://github.com/vasya436/vector-role)
+
+[Lighthouse Role](https://github.com/vasya436/lighthouse-role) (v1.0.0)
+
+[Ansible Playbook](https://github.com/vasya436/ansible-playbook)
 
 
