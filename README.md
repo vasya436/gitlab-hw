@@ -198,6 +198,7 @@ if __name__ == '__main__':
 
 ![Задание 1 — скриншот работы](https://github.com/vasya436/gitlab-hw/blob/main/img/VirtualBox_Vasya64_09_10_2026_00_31_50.png%20%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%201.png)
 
+![img001 — результат этапа](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/img001.png)
 
 
 
