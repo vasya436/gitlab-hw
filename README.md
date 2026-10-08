@@ -196,13 +196,16 @@ if __name__ == '__main__':
 Архив коллекции: `my_own_namespace-yandex_cloud-elk-1.0.0.tar.gz`  
 Путь: `/home/vasya10/projects/my_own_namespace.yandex_cloud_elk/my_own_namespace/yandex_cloud_elk`
 
-![Задание 1: установка коллекции](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task-1-install-collection.png)
+![Задание 1 — скриншот работы](https://github.com/vasya436/gitlab-hw/blob/main/img/VirtualBox_Vasya64_09_10_2026_00_31_50.png%20%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%201.png)
+
+![img001 — результат этапа](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/img001.png)
 
 
 
-![Задание 2: первый запуск плейбука (changed: true)](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task-2-first-run.png)
+
+![Задание 3 — вывод playbook](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/VirtualBox_Vasya64_09_10_2026_00_41_34.png)
 
 ![Пункт 4: проверка идемпотентности](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task-4-idempotency.png)
 
-![Пункт 5: проверка вывода](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task-5-check-output.png)
+
 
