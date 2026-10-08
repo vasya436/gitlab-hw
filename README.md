@@ -206,7 +206,8 @@ if __name__ == '__main__':
 
 ![Задание 3 — вывод playbook](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/VirtualBox_Vasya64_09_10_2026_00_41_34.png)
 
-![Пункт 4: проверка идемпотентности](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/task-4-idempotency.png)
+![img002 — результат этапа](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/img002.png)
+
 
 
 
