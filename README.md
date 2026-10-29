@@ -72,7 +72,17 @@
     ![DevOps question 9](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/devops-q9.png)
 
 12. Сделал push всех изменений в новую ветку репозитория.
-13. Убедился, что сборка самостоятельно запустилась, тесты прошли успешно:
+13. Убедился, что сборка самостоятельно запустилась, тесты прошли успешно.
+14. Сделал Merge ветки feature/add_reply в master.
+
+![DevOps question 10](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/devops-q10.png)
+
+15. Убедитесь, что нет собранного артефакта в сборке по ветке master.
+16. Настройте конфигурацию так, чтобы она собирала .jar в артефакты сборки.
+17. Провел повторную сборку мастера, но к сожалению сборка не прошла успешно и артефакты не собраны. Пробовал изменить версию в pom.xml на 0.0.2, но это не помогло. Все равно сборка не прошла:
+
+![DevOps question 11](https://raw.githubusercontent.com/vasya436/gitlab-hw/main/img/devops-q11.png)
+
 
 
 
