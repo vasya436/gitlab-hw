@@ -1,78 +1,71 @@
-# Домашнее задание к занятию 14 «Средство визуализации Grafana» Василий Ткаченко
+# Домашнее задание к занятию 15 «Система сбора логов Elastic Stack» Василий Ткаченко
+
+## Дополнительные ссылки
+
+При выполнении задания используйте дополнительные ресурсы:
+
+- [поднимаем elk в docker](https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-docker.html);
+- [поднимаем elk в docker с filebeat и docker-логами](https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html);
+- [конфигурируем logstash](https://www.elastic.co/guide/en/logstash/current/configuration.html);
+- [плагины filter для logstash](https://www.elastic.co/guide/en/logstash/current/filter-plugins.html);
+- [конфигурируем filebeat](https://www.elastic.co/guide/en/beats/libbeat/5.3/config-file-format.html);
+- [привязываем индексы из elastic в kibana](https://www.elastic.co/guide/en/kibana/current/index-patterns.html);
+- [как просматривать логи в kibana](https://www.elastic.co/guide/en/kibana/current/discover.html);
+- [решение ошибки increase vm.max_map_count elasticsearch](https://stackoverflow.com/questions/42889241/how-to-increase-vm-max-map-count).
+
+В процессе выполнения в зависимости от системы могут также возникнуть не указанные здесь проблемы.
+
+Используйте output stdout filebeat/kibana и api elasticsearch для изучения корня проблемы и её устранения.
 
 ## Задание повышенной сложности
 
-**При решении задания 1** не используйте директорию [help](./help) для сборки проекта. Самостоятельно разверните grafana, где в роли источника данных будет выступать prometheus, а сборщиком данных будет node-exporter:
+Не используйте директорию [help](./help) при выполнении домашнего задания.
 
-- grafana;
-- prometheus-server;
-- prometheus node-exporter.
+## Задание 1
 
-За дополнительными материалами можете обратиться в официальную документацию grafana и prometheus.
+Вам необходимо поднять в докере и связать между собой:
 
-В решении к домашнему заданию также приведите все конфигурации, скрипты, манифесты, которые вы 
-использовали в процессе решения задания.
+- elasticsearch (hot и warm ноды);
+- logstash;
+- kibana;
+- filebeat.
 
-**При решении задания 3** вы должны самостоятельно завести удобный для вас канал нотификации, например, Telegram или email, и отправить туда тестовые события.
+Logstash следует сконфигурировать для приёма по tcp json-сообщений.
 
-В решении приведите скриншоты тестовых событий из каналов нотификаций.
+Filebeat следует сконфигурировать для отправки логов docker вашей системы в logstash.
 
-## Обязательные задания
+В директории [help](./help) находится манифест docker-compose и конфигурации filebeat/logstash для быстрого 
+выполнения этого задания.
 
-### Задание 1
+Результатом выполнения задания должны быть:
 
-1. Используя директорию [help](./help) внутри этого домашнего задания, запустите связку prometheus-grafana.
-1. Зайдите в веб-интерфейс grafana, используя авторизационные данные, указанные в манифесте docker-compose.
-1. Подключите поднятый вами prometheus, как источник данных.
-1. Решение домашнего задания — скриншот веб-интерфейса grafana со списком подключенных Datasource.
+- скриншот `docker ps` через 5 минут после старта всех контейнеров (их должно быть 5);
+- скриншот интерфейса kibana;
+- docker-compose манифест (если вы не использовали директорию help);
+- ваши yml-конфигурации для стека (если вы не использовали директорию help).
 
-![Шард B10: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b10.png)
+![Шард B20: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b20.png)
 
-![Шард B11: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b11.png)
+![Шард B21: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b21.png)
+
 
 ## Задание 2
 
-Изучите самостоятельно ресурсы:
+Перейдите в меню [создания index-patterns  в kibana](http://localhost:5601/app/management/kibana/indexPatterns/create) и создайте несколько index-patterns из имеющихся.
 
-1. [PromQL tutorial for beginners and humans](https://valyala.medium.com/promql-tutorial-for-beginners-9ab455142085).
-1. [Understanding Machine CPU usage](https://www.robustperception.io/understanding-machine-cpu-usage).
-1. [Introduction to PromQL, the Prometheus query language](https://grafana.com/blog/2020/02/04/introduction-to-promql-the-prometheus-query-language/).
+Перейдите в меню просмотра логов в kibana (Discover) и самостоятельно изучите, как отображаются логи и как производить поиск по логам.
 
-Создайте Dashboard и в ней создайте Panels:
+В манифесте директории help также приведенно dummy-приложение, которое генерирует рандомные события в stdout-контейнера.
+Эти логи должны порождать индекс logstash-* в elasticsearch. Если этого индекса нет — воспользуйтесь советами и источниками из раздела «Дополнительные ссылки» этого задания.
+ 
+---
 
-- утилизация CPU для nodeexporter (в процентах, 100-idle);
-- CPULA 1/5/15;
-- количество свободной оперативной памяти;
-- количество места на файловой системе.
+### Как оформить решение задания
 
-Для решения этого задания приведите promql-запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
+Выполненное домашнее задание пришлите в виде ссылки на .md-файл в вашем репозитории.
 
-![Шард B12: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b12.png)
+![Шард B22: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b22.png){width=600}
 
-## Задание 3
-
-1. Создайте для каждой Dashboard подходящее правило alert — можно обратиться к первой лекции в блоке «Мониторинг».
-1. В качестве решения задания приведите скриншот вашей итоговой Dashboard.
-
-![Шард B13: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b13.png)
-
-![Шард B14: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b14.png)
-
-![Шард B15: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b15.png)
-
-![Шард B16: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b16.png)
-
-## Задание 4
-
-1. Сохраните ваш Dashboard.Для этого перейдите в настройки Dashboard, выберите в боковом меню «JSON MODEL». Далее скопируйте отображаемое json-содержимое в отдельный файл и сохраните его.
-1. В качестве решения задания приведите листинг этого файла.
-
-[dashboard.json](https://github.com/vasya436/gitlab-hw/blob/main/configs/dashboard.json)
-
-
-
-
-
-
+![Шард B23: структура или статус](https://github.com/vasya436/gitlab-hw/raw/main/img/shard-b23.png)
 
 
